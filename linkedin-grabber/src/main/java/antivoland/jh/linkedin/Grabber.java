@@ -1,6 +1,7 @@
 package antivoland.jh.linkedin;
 
 import antivoland.jh.Storage;
+import antivoland.jh.model.Offer;
 import com.codeborne.selenide.SelenideElement;
 import com.google.inject.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,6 +16,7 @@ import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
 
 class Grabber {
+    /*
     private static final Logger LOG = LoggerFactory.getLogger(Grabber.class);
 
     public static void main(String[] args) {
@@ -45,20 +47,20 @@ class Grabber {
                     .filter(Files::isRegularFile)
                     .filter(path -> path.endsWith("meta.json"))
                     .peek(path -> LOG.debug(path.toString()))
-                    .map(Meta::load)
+                    .map(Offer::load)
                     .forEach(this::grab);
         } catch (IOException e) {
             LOG.warn("Failed to grab articles");
         }
     }
 
-    void grab(Meta meta) {
-        var path = storage.article(meta.date, meta.name).resolve("article.txt");
+    void grab(Offer offer) {
+        var path = storage.article(offer.date, offer.name).resolve("article.txt");
         if (Files.exists(path)) {
             return;
         }
         using(new ChromeDriver(), () -> {
-            open(meta.url);
+            open(offer.url);
 
             var text = $$("section")
                     .stream()
@@ -74,4 +76,5 @@ class Grabber {
             closeWindow();
         });
     }
+     */
 }

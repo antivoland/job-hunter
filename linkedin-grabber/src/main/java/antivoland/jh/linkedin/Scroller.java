@@ -1,6 +1,8 @@
 package antivoland.jh.linkedin;
 
 import antivoland.jh.Storage;
+import antivoland.jh.model.Company;
+import antivoland.jh.model.Offer;
 import com.codeborne.selenide.SelenideElement;
 import com.google.inject.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -8,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.time.MonthDay;
-import java.time.Year;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.util.Set;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -29,7 +28,7 @@ class Scroller {
         });
 
         LOG.info("Data directory: " + injector.getInstance(Storage.class).root());
-        injector.getInstance(Scroller.class).run("technology");
+        injector.getInstance(Scroller.class).run("tallinn");
     }
 
     final Storage storage;
@@ -39,9 +38,29 @@ class Scroller {
         this.storage = storage;
     }
 
-    void run(String topic) {
+    void run(String city) {
         LOG.info("Scrolling...");
         using(new ChromeDriver(), () -> {
+            open("https://www.linkedin.com/jobs/search");
+
+            $("button[data-control-name='ga-cookie.consent.deny.v4']").click();
+
+            $("input[id='job-search-bar-location']").click();
+            $("input[id='job-search-bar-location']").clear();
+            $("input[id='job-search-bar-location']").sendKeys(city);
+            $("button[data-tracking-control-name='public_jobs_jobs-search-bar_base-search-bar-search-submit']").click();
+
+            $("button[data-tracking-control-name='public_jobs_conversion-modal_dismiss']").click();
+
+            $$("ul[class='jobs-search__results-list'] li")
+                    .stream()
+                    .map(Thumbnail::new)
+                    .forEach(thumbnail -> {
+                        storage.updateCompany(thumbnail.company());
+                        storage.updateOffer(thumbnail.offer());
+                    });
+
+            /*
             open("https://medium.com/topic/" + topic);
 
             scroll(0);
@@ -55,6 +74,7 @@ class Scroller {
                     .forEach(meta -> meta.save(storage));
 
             closeWindow();
+             */
         });
     }
 
@@ -67,70 +87,53 @@ class Scroller {
         }
     }
 
-    record Section(SelenideElement value) {
-
-        String name() {
-            var url = value.$("a").attr("href");
-            url = substringBefore(url, "?");
-            return substringAfterLast(url, "/");
-        }
+    record Thumbnail(SelenideElement value) {
 
         String title() {
-            return value.$("h3").text();
+            return trim(value.$("h3").text());
         }
 
-        boolean hasSummary() {
-            return value.$$("h3").size() > 1;
+        String offerUrl() {
+            return trim(value.$("a[data-tracking-control-name='public_jobs_jserp-result_search-card']").attr("href"));
         }
 
-        String summary() {
-            return hasSummary() ? value.$$("h3").get(1).text() : null;
+        String offerId() {
+            return substringAfterLast(substringBefore(offerUrl(), "?"), "/");
         }
 
-        String author() {
-            var links = value.$$("a");
-            var url = links.get(hasSummary() ? 3 : 2).attr("href");
-            url = substringBefore(url, "?");
-            if (url.contains("@")) {
-                return substringAfter(url, "@");
-            }
-            return substringBetween(url, "//", ".");
+        String companyName() {
+            return trim(value.$("h4").text());
         }
 
-        String organization() {
-            var links = value.$$("a");
-            var link = links.get(hasSummary() ? 4 : 3);
-            if (!link.text().startsWith(" in ")) return null;
-            var url = link.attr("href");
-            url = substringBefore(url, "?");
-            return substringAfter(url, ".com/");
+        String companyUrl() {
+            return trim(value.$("h4 a").attr("href"));
+        }
+
+        String companyId() {
+            return substringAfterLast(substringBefore(companyUrl(), "?"), "/");
         }
 
         LocalDate date() {
-            var values = value.text().split("\n");
-            var monthDay = values[values.length - 3];
-            var formatter = DateTimeFormatter.ofPattern("MMM d", Locale.ENGLISH);
-            return MonthDay.parse(monthDay, formatter).atYear(Year.now().getValue());
+            return LocalDate.parse(trim(value.$("time").attr("datetime")));
         }
 
-        String url() {
-            var url = value.$("a").attr("href");
-            return substringBefore(url, "?");
+        Company company() {
+            return new Company().setId(companyId()).setNames(Set.of(companyName()));
         }
 
-        Meta asMeta() {
-            return new Meta()
-                    .setName(name())
-                    .setTitle(title())
-                    .setSummary(summary())
-                    .setAuthor(author())
-                    .setOrganization(organization())
-                    .setDate(date())
-                    .setUrl(url());
+        Offer offer() {
+            return new Offer().setId(offerId()).setCompanyId(companyId()).setTitle(title()).setDate(date());
         }
 
-        static boolean suitable(SelenideElement value) {
-            return value.$$("a").size() > 3;
+        @Override
+        public String toString() {
+            return "title=" + title() +
+                    "\nofferUrl=" + offerUrl() +
+                    "\nofferId=" + offerId() +
+                    "\ncompanyName=" + companyName() +
+                    "\ncompanyUrl=" + companyUrl() +
+                    "\ncompanyId=" + companyId() +
+                    "\ndate=" + date();
         }
     }
 }
