@@ -1,14 +1,16 @@
 package antivoland.jh.linkedin;
 
 import antivoland.jh.linkedin.search.Thumbnail;
-import antivoland.jh.storage.CompanyStorage;
+import antivoland.jh.model.Offer;
 import antivoland.jh.storage.Cache;
+import antivoland.jh.storage.CompanyStorage;
 import antivoland.jh.storage.OfferStorage;
 import com.google.inject.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.Random;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 
 class Grabber {
@@ -75,12 +77,19 @@ class Grabber {
                 .limit(3)
                 .map(Thumbnail::new)
                 .forEach(thumbnail -> {
-                    thumbnail.value().click();
                     sleep(1000 + new Random().nextInt(1000));
-                    var details = $("section[class='two-pane-serp-page__detail-view']").innerHtml();
-                    offerCache.save(thumbnail.offer().getId(), details);
+                    thumbnail.value().click();
 
-                    offerStorage.update(thumbnail.offer());
+                    $("a[data-tracking-control-name='public_jobs_topcard-title'")
+                            .shouldBe(text(thumbnail.offer().getTitle()));
+//                    var details = $("section[class='two-pane-serp-page__detail-view']").innerHtml();
+//                    var details = $("html").innerHtml();
+                    offerCache.save(thumbnail.offer().getId(), $("html").innerHtml());
+
+                    var cachedOffer = offerCache.load(thumbnail.offer().getId());
+                    var offer = Offer.parse(cachedOffer);
+
+                    offerStorage.update(offer);
                     companyStorage.update(thumbnail.company());
                 });
     }

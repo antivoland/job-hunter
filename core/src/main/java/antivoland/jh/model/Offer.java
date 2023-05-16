@@ -17,4 +17,8 @@ public class Offer {
         if (offer == null) return this;
         return new Offer().setId(id).setCompanyId(companyId).setTitle(title).setDate(date);
     }
+
+    public static Offer parse(String html) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
 }
