@@ -1,35 +1,34 @@
 package antivoland.jh.linkedin;
 
-import antivoland.jh.Storage;
 import antivoland.jh.linkedin.search.Thumbnail;
+import antivoland.jh.storage.CompanyStorage;
+import antivoland.jh.storage.OfferStorage;
 import com.google.inject.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static com.codeborne.selenide.Selenide.*;
 
 class Grabber {
-    private static final Logger LOG = LoggerFactory.getLogger(Grabber.class);
-
     public static void main(String[] args) {
         var injector = Guice.createInjector(Stage.PRODUCTION, new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Storage.class).in(Scopes.SINGLETON);
+                bind(OfferStorage.class).in(Scopes.SINGLETON);
+                bind(CompanyStorage.class).in(Scopes.SINGLETON);
                 bind(Grabber.class).in(Scopes.SINGLETON);
             }
         });
 
-        LOG.info("Data directory: " + injector.getInstance(Storage.class).root());
         injector.getInstance(Grabber.class).run();
     }
 
-    final Storage storage;
+    final OfferStorage offerStorage;
+    final CompanyStorage companyStorage;
 
     @Inject
-    Grabber(Storage storage) {
-        this.storage = storage;
+    Grabber(OfferStorage offerStorage, CompanyStorage companyStorage) {
+        this.offerStorage = offerStorage;
+        this.companyStorage = companyStorage;
     }
 
     void run() {
@@ -71,8 +70,8 @@ class Grabber {
                 .stream()
                 .map(Thumbnail::new)
                 .forEach(thumbnail -> {
-                    storage.updateCompany(thumbnail.company());
-                    storage.updateOffer(thumbnail.offer());
+                    offerStorage.update(thumbnail.offer());
+                    companyStorage.update(thumbnail.company());
                 });
     }
 
