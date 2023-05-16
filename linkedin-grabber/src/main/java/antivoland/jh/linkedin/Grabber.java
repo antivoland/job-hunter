@@ -22,7 +22,7 @@ class Grabber {
         });
 
         LOG.info("Data directory: " + injector.getInstance(Storage.class).root());
-        injector.getInstance(Grabber.class).run("tallinn");
+        injector.getInstance(Grabber.class).run();
     }
 
     final Storage storage;
@@ -32,7 +32,7 @@ class Grabber {
         this.storage = storage;
     }
 
-    void run(String location) {
+    void run() {
         using(new ChromeDriver(), () -> {
             open("https://www.linkedin.com/jobs/search");
 
@@ -40,18 +40,12 @@ class Grabber {
 
             $("input[id='job-search-bar-location']").click();
             $("input[id='job-search-bar-location']").clear();
-            $("input[id='job-search-bar-location']").sendKeys(location);
+            $("input[id='job-search-bar-location']").sendKeys("tallinn");
             $("button[data-tracking-control-name='public_jobs_jobs-search-bar_base-search-bar-search-submit']").click();
 
             $("button[data-tracking-control-name='public_jobs_conversion-modal_dismiss']").click();
 
-            $$("ul[class='jobs-search__results-list'] li")
-                    .stream()
-                    .map(Thumbnail::new)
-                    .forEach(thumbnail -> {
-                        storage.updateCompany(thumbnail.company());
-                        storage.updateOffer(thumbnail.offer());
-                    });
+            new Controller().listen(this);
 
             /*
             open("https://medium.com/topic/" + topic);
@@ -66,9 +60,24 @@ class Grabber {
                     .map(Section::asMeta)
                     .forEach(meta -> meta.save(storage));
 
-            closeWindow();
              */
+
+            closeWindow();
         });
+    }
+
+    public void grab() {
+        $$("ul[class='jobs-search__results-list'] li")
+                .stream()
+                .map(Thumbnail::new)
+                .forEach(thumbnail -> {
+                    storage.updateCompany(thumbnail.company());
+                    storage.updateOffer(thumbnail.offer());
+                });
+    }
+
+    public void scroll() {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     static void scroll(int times) {
@@ -79,5 +88,4 @@ class Grabber {
             ++i;
         }
     }
-
 }
