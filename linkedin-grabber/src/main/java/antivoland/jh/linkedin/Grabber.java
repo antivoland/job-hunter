@@ -2,9 +2,12 @@ package antivoland.jh.linkedin;
 
 import antivoland.jh.linkedin.search.Thumbnail;
 import antivoland.jh.storage.CompanyStorage;
+import antivoland.jh.storage.Cache;
 import antivoland.jh.storage.OfferStorage;
 import com.google.inject.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.Random;
 
 import static com.codeborne.selenide.Selenide.*;
 
@@ -24,6 +27,7 @@ class Grabber {
 
     final OfferStorage offerStorage;
     final CompanyStorage companyStorage;
+    final Cache<String> offerCache = new Cache<>("offers");
 
     @Inject
     Grabber(OfferStorage offerStorage, CompanyStorage companyStorage) {
@@ -68,8 +72,14 @@ class Grabber {
     public void grab() {
         $$("ul[class='jobs-search__results-list'] li")
                 .stream()
+                .limit(3)
                 .map(Thumbnail::new)
                 .forEach(thumbnail -> {
+                    thumbnail.value().click();
+                    sleep(1000 + new Random().nextInt(1000));
+                    var details = $("section[class='two-pane-serp-page__detail-view']").innerHtml();
+                    offerCache.save(thumbnail.offer().getId(), details);
+
                     offerStorage.update(thumbnail.offer());
                     companyStorage.update(thumbnail.company());
                 });

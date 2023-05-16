@@ -4,9 +4,11 @@ import antivoland.jh.model.Offer;
 
 public class OfferStorage {
     private final JsonFileStorage<Offer, String> storage;
+    private final Cache<String> cache;
 
     public OfferStorage() {
-        this.storage = new JsonFileStorage<>("offers", Offer.class, Offer::getId);
+        storage = new JsonFileStorage<>("offers", Offer.class, Offer::getId);
+        cache = new Cache<>("offers");
     }
 
     public Offer get(String id) {

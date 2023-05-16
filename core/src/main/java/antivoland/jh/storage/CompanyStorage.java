@@ -6,7 +6,7 @@ public class CompanyStorage {
     private final JsonFileStorage<Company, String> storage;
 
     public CompanyStorage() {
-        this.storage = new JsonFileStorage<>("companies", Company.class, Company::getId);
+        storage = new JsonFileStorage<>("companies", Company.class, Company::getId);
     }
 
     public Company get(String id) {
