@@ -19,8 +19,12 @@ public class Cache<ID> {
     private final FileStorage storage;
 
     public Cache(String name) {
+        this(Paths.get(DEFAULT_DIR), name);
+    }
+
+    public Cache(Path root, String name) {
+        storage = new FileStorage(root);
         this.name = name;
-        storage = new FileStorage(Paths.get(DEFAULT_DIR));
     }
 
     public String load(ID id) {
