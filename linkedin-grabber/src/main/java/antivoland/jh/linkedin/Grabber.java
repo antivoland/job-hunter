@@ -2,7 +2,7 @@ package antivoland.jh.linkedin;
 
 import antivoland.jh.linkedin.search.Thumbnail;
 import antivoland.jh.model.Offer;
-import antivoland.jh.storage.Cache;
+import antivoland.jh.storage.HtmlCache;
 import antivoland.jh.storage.CompanyStorage;
 import antivoland.jh.storage.OfferStorage;
 import com.google.inject.*;
@@ -29,7 +29,7 @@ class Grabber {
 
     final OfferStorage offerStorage;
     final CompanyStorage companyStorage;
-    final Cache<String> offerCache = new Cache<>("offers");
+    final HtmlCache<String> offerCache = new HtmlCache<>("offers");
 
     @Inject
     Grabber(OfferStorage offerStorage, CompanyStorage companyStorage) {
@@ -87,9 +87,9 @@ class Grabber {
                     offerCache.save(thumbnail.offer().getId(), $("html").innerHtml());
 
                     var cachedOffer = offerCache.load(thumbnail.offer().getId());
-                    var offer = Offer.parse(cachedOffer);
+//                    var offer = Offer.parse(cachedOffer);
 
-                    offerStorage.update(offer);
+                    offerStorage.update(thumbnail.offer());
                     companyStorage.update(thumbnail.company());
                 });
     }

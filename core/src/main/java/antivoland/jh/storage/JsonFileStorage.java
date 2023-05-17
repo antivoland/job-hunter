@@ -26,32 +26,32 @@ class JsonFileStorage<DATA, ID> extends FileStorage {
     }
 
     DATA load(ID id) {
-        return load(path(id), clazz);
+        return load(file(id), clazz);
     }
 
     void save(DATA data) {
-        save(path(resolveId.apply(data)), data);
+        save(file(resolveId.apply(data)), data);
     }
 
-    private Path path(ID id) {
-        return provide(root.resolve(name)).resolve(id + ".json");
+    private Path file(ID id) {
+        return provide("data", name).resolve(id + ".json");
     }
 
-    private static <DATA> DATA load(Path path, Class<DATA> clazz) {
-        if (!Files.exists(path)) {
+    private static <DATA> DATA load(Path file, Class<DATA> clazz) {
+        if (!Files.exists(file)) {
             return null;
         }
         try {
-            return MAPPER.readValue(path.toFile(), clazz);
+            return MAPPER.readValue(file.toFile(), clazz);
         } catch (IOException e) {
             LOG.warn("Failed to load data", e);
             return null;
         }
     }
 
-    private static <DATA> void save(Path path, DATA data) {
+    private static <DATA> void save(Path file, DATA data) {
         try {
-            MAPPER.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), data);
+            MAPPER.writerWithDefaultPrettyPrinter().writeValue(file.toFile(), data);
         } catch (IOException e) {
             LOG.warn("Failed to save data", e);
         }

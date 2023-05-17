@@ -6,26 +6,34 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 class FileStorage {
-    private static final String DEFAULT_DATA_DIR = System.getProperty("user.dir") + "/data";
+    private static final Path DEFAULT_ROOT = Paths.get(System.getProperty("user.dir"));
 
     protected final Path root;
 
     FileStorage() {
-        this(Paths.get(DEFAULT_DATA_DIR));
+        this(DEFAULT_ROOT);
     }
 
     FileStorage(Path root) {
         this.root = root;
     }
 
-    protected static Path provide(Path path) {
-        if (!Files.exists(path)) {
+    Path provide(String... directoryNames) {
+        var directory = root;
+        for (var directoryName : directoryNames) {
+            directory = directory.resolve(directoryName);
+        }
+        return provide(directory);
+    }
+
+    private static Path provide(Path directory) {
+        if (!Files.exists(directory)) {
             try {
-                Files.createDirectories(path);
+                Files.createDirectories(directory);
             } catch (IOException e) {
                 throw new Error(e);
             }
         }
-        return path;
+        return directory;
     }
 }
