@@ -20,6 +20,8 @@ public class OfferHtmlExtractor {
                 .setId(offerId())
                 .setCompanyId(companyId())
                 .setTitle(title())
+                .setDescription(description())
+                .setApplicants(applicants())
                 .setDate(date());
     }
 
@@ -47,6 +49,18 @@ public class OfferHtmlExtractor {
         return trim(document
                 .select("a[data-tracking-control-name=public_jobs_topcard-title] h2")
                 .text());
+    }
+
+    private String description() {
+        return trim(document
+                .select("div[class*=show-more-less-html]")
+                .text());
+    }
+
+    private Integer applicants() {
+        return Integer.parseInt(trim(document
+                .select("span[class*=num-applicants]")
+                .text()).replaceAll("[^\\d.]", ""));
     }
 
     private LocalDate date() {

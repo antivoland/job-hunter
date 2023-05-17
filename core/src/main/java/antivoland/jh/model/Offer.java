@@ -11,6 +11,8 @@ public class Offer {
     String id;
     String companyId;
     String title;
+    String description;
+    Integer applicants;
     LocalDate date;
 
     public Offer merge(Offer offer) {

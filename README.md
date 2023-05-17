@@ -1,0 +1,1 @@
+This is an attempt to grab and analyze job openings using public LinkedIn search that may help me to figure out my next career step.

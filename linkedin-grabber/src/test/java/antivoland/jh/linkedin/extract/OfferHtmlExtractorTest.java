@@ -8,7 +8,7 @@ import java.util.Scanner;
 class OfferHtmlExtractorTest {
     @Test
     void test() {
-        var html = load("cache/offers/specjalista-epr-at-blrt-grupp-3591706064.html");
+        var html = load("cache/offers/marketing-assistant.html");
         var offer = new OfferHtmlExtractor(html).extract();
         System.out.println(offer);
         // todo: compare extracted offer with sample
