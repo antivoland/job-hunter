@@ -13,12 +13,7 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 public class HtmlCache<ID> {
     private static final Logger LOG = LoggerFactory.getLogger(HtmlCache.class);
 
-    final String name;
     private final FileStorage storage = new FileStorage();
-
-    public HtmlCache(String name) {
-        this.name = name;
-    }
 
     public String load(ID id) {
         return load(file(id));
@@ -29,7 +24,7 @@ public class HtmlCache<ID> {
     }
 
     private Path file(ID id) {
-        return storage.provide("cache", name).resolve(id + ".html");
+        return storage.provide("cache").resolve(id + ".html");
     }
 
     private static String load(Path file) {

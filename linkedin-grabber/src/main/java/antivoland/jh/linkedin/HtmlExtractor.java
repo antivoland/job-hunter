@@ -1,21 +1,23 @@
-package antivoland.jh.linkedin.extract;
+package antivoland.jh.linkedin;
 
+import antivoland.jh.model.Company;
 import antivoland.jh.model.Offer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
-public class OfferHtmlExtractor {
+class HtmlExtractor {
     private final Document document;
 
-    public OfferHtmlExtractor(String html) {
+    public HtmlExtractor(String html) {
         this.document = Jsoup.parse(html);
     }
 
-    public Offer extract() {
+    Offer extractOffer() {
         return new Offer()
                 .setId(offerId())
                 .setCompanyId(companyId())
@@ -23,6 +25,12 @@ public class OfferHtmlExtractor {
                 .setDescription(description())
                 .setApplicants(applicants())
                 .setDate(date());
+    }
+
+    Company extractCompany() {
+        return new Company()
+                .setId(offerId())
+                .setNames(Set.of(companyName()));
     }
 
     private String offerId() {
@@ -45,6 +53,12 @@ public class OfferHtmlExtractor {
                 .attr("href"));
     }
 
+    private String companyName() {
+        return trim(document
+                .select("a[data-tracking-control-name=public_jobs_topcard-org-name]")
+                .text());
+    }
+
     private String title() {
         return trim(document
                 .select("a[data-tracking-control-name=public_jobs_topcard-title] h2")
@@ -59,7 +73,7 @@ public class OfferHtmlExtractor {
 
     private Integer applicants() {
         return Integer.parseInt(trim(document
-                .select("span[class*=num-applicants]")
+                .select("*[class*=num-applicants__caption]")
                 .text()).replaceAll("[^\\d.]", ""));
     }
 

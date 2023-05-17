@@ -9,32 +9,31 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.Function;
 
-class JsonFileStorage<DATA, ID> extends FileStorage {
+public class JsonFileStorage<DATA, ID> extends FileStorage {
     private static final Logger LOG = LoggerFactory.getLogger(JsonFileStorage.class);
     private static final ObjectMapper MAPPER = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
-    private final String name;
     private final Class<DATA> clazz;
-    private final Function<DATA, ID> resolveId;
 
-    JsonFileStorage(String name, Class<DATA> clazz, Function<DATA, ID> resolveId) {
-        this.name = name;
+    public JsonFileStorage(Class<DATA> clazz) {
         this.clazz = clazz;
-        this.resolveId = resolveId;
     }
 
-    DATA load(ID id) {
+    public boolean exists(ID id) {
+        return Files.exists(file(id));
+    }
+
+    public DATA load(ID id) {
         return load(file(id), clazz);
     }
 
-    void save(DATA data) {
-        save(file(resolveId.apply(data)), data);
+    public void save(ID id, DATA data) {
+        save(file(id), data);
     }
 
     private Path file(ID id) {
-        return provide("data", name).resolve(id + ".json");
+        return provide("data").resolve(id + ".json");
     }
 
     private static <DATA> DATA load(Path file, Class<DATA> clazz) {

@@ -1,10 +1,5 @@
 package antivoland.jh.linkedin;
 
-import antivoland.jh.linkedin.search.Thumbnail;
-import antivoland.jh.model.Offer;
-import antivoland.jh.storage.HtmlCache;
-import antivoland.jh.storage.CompanyStorage;
-import antivoland.jh.storage.OfferStorage;
 import com.google.inject.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -18,8 +13,7 @@ class Grabber {
         var injector = Guice.createInjector(Stage.PRODUCTION, new AbstractModule() {
             @Override
             protected void configure() {
-                bind(OfferStorage.class).in(Scopes.SINGLETON);
-                bind(CompanyStorage.class).in(Scopes.SINGLETON);
+                bind(Processor.class).in(Scopes.SINGLETON);
                 bind(Grabber.class).in(Scopes.SINGLETON);
             }
         });
@@ -27,14 +21,11 @@ class Grabber {
         injector.getInstance(Grabber.class).run();
     }
 
-    final OfferStorage offerStorage;
-    final CompanyStorage companyStorage;
-    final HtmlCache<String> offerCache = new HtmlCache<>("offers");
+    final Processor processor;
 
     @Inject
-    Grabber(OfferStorage offerStorage, CompanyStorage companyStorage) {
-        this.offerStorage = offerStorage;
-        this.companyStorage = companyStorage;
+    Grabber(Processor processor) {
+        this.processor = processor;
     }
 
     void run() {
@@ -74,28 +65,26 @@ class Grabber {
     public void grab() {
         $$("ul[class='jobs-search__results-list'] li")
                 .stream()
-                .limit(3)
                 .map(Thumbnail::new)
                 .forEach(thumbnail -> {
-                    sleep(1000 + new Random().nextInt(1000));
-                    thumbnail.value().click();
+                    if (processor.shouldProcess(thumbnail.offerId())) {
+                        sleep(1000 + new Random().nextInt(1000));
+                        thumbnail.value().click();
 
-                    $("a[data-tracking-control-name='public_jobs_topcard-title'")
-                            .shouldBe(text(thumbnail.offer().getTitle()));
-//                    var details = $("section[class='two-pane-serp-page__detail-view']").innerHtml();
-//                    var details = $("html").innerHtml();
-                    offerCache.save(thumbnail.offer().getId(), $("html").innerHtml());
+                        try {
+                            $("a[data-tracking-control-name='public_jobs_topcard-title'")
+                                    .shouldBe(text(thumbnail.offer().getTitle()));
 
-                    var cachedOffer = offerCache.load(thumbnail.offer().getId());
-//                    var offer = Offer.parse(cachedOffer);
-
-                    offerStorage.update(thumbnail.offer());
-                    companyStorage.update(thumbnail.company());
+                            processor.process(thumbnail.offerId(), $("html").innerHtml());
+                        } catch (AssertionError e) {
+                            // todo: implement some response
+                        }
+                    }
                 });
     }
 
     public void scroll() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        executeJavaScript("scroll(0, document.body.scrollHeight);");
     }
 
     static void scroll(int times) {

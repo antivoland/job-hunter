@@ -1,4 +1,4 @@
-package antivoland.jh.linkedin.search;
+package antivoland.jh.linkedin;
 
 import antivoland.jh.model.Company;
 import antivoland.jh.model.Offer;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
-public record Thumbnail(SelenideElement value) {
+record Thumbnail(SelenideElement value) {
     String title() {
         return trim(value.$("h3").text());
     }
@@ -38,11 +38,11 @@ public record Thumbnail(SelenideElement value) {
         return LocalDate.parse(trim(value.$("time").attr("datetime")));
     }
 
-    public Offer offer() {
+    Offer offer() {
         return new Offer().setId(offerId()).setCompanyId(companyId()).setTitle(title()).setDate(date());
     }
 
-    public Company company() {
+    Company company() {
         return new Company().setId(companyId()).setNames(Set.of(companyName()));
     }
 
