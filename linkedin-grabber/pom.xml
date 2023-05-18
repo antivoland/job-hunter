@@ -38,6 +38,11 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.creditnet</groupId>
+            <artifactId>console-progress-bar</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>

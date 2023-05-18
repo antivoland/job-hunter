@@ -38,6 +38,7 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <guava.version>31.1-jre</guava.version>
         <deeplearning4j.version>1.0.0-M2.1</deeplearning4j.version>
+        <console-progress-bar.version>1.0.0</console-progress-bar.version>
         <lombok.version>1.18.20</lombok.version>
         <logback.version>1.2.5</logback.version>
         <junit.version>5.9.3</junit.version>
@@ -115,6 +116,12 @@
                 <groupId>org.deeplearning4j</groupId>
                 <artifactId>deeplearning4j-nlp</artifactId>
                 <version>${deeplearning4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ru.creditnet</groupId>
+                <artifactId>console-progress-bar</artifactId>
+                <version>${console-progress-bar.version}</version>
             </dependency>
 
             <dependency>

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
@@ -14,6 +15,14 @@ public class HtmlCache<ID> {
     private static final Logger LOG = LoggerFactory.getLogger(HtmlCache.class);
 
     private final FileStorage storage = new FileStorage();
+
+    public long count() {
+        return storage.count("cache");
+    }
+
+    public Stream<String> list() {
+        return storage.list("cache").map(HtmlCache::load);
+    }
 
     public String load(ID id) {
         return load(file(id));

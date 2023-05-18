@@ -14,7 +14,11 @@ class HtmlExtractor {
     private final Document document;
 
     public HtmlExtractor(String html) {
-        this.document = Jsoup.parse(html);
+        document = Jsoup.parse(html);
+    }
+
+    static Offer extractOffer(String html) {
+        return new HtmlExtractor(html).extractOffer();
     }
 
     Offer extractOffer() {
@@ -66,9 +70,19 @@ class HtmlExtractor {
     }
 
     private String description() {
-        return trim(document
-                .select("div[class*=show-more-less-html]")
-                .text());
+        var html = document.select("div[class*=show-more-less-html]").html();
+        var description = Jsoup.parse(html);
+        description.select("*").append("x_X");
+        var lines = description.text()
+                .replaceAll("x_X", "\n")
+                .replaceAll("\\.", "\\.\n");
+        var sb = new StringBuilder();
+        for (var line : lines.split("\n")) {
+            if (!isBlank(line)) {
+                sb.append(trim(line)).append("\n");
+            }
+        }
+        return trim(sb.toString());
     }
 
     private Integer applicants() {

@@ -19,6 +19,14 @@ class FileStorage {
         this.root = root;
     }
 
+    public long count(String... directoryNames) {
+        try (var files = Files.walk(provide(directoryNames)).filter(Files::isRegularFile)) {
+            return files.count();
+        } catch (IOException e) {
+            throw new Error(e);
+        }
+    }
+
     Stream<Path> list(String... directoryNames) {
         try (var files = Files.walk(provide(directoryNames)).filter(Files::isRegularFile)) {
             return files.toList().stream();
