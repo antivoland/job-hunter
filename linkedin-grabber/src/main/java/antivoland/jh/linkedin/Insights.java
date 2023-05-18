@@ -8,8 +8,13 @@ import com.google.inject.Scopes;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.TreeMap;
+
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.reverseOrder;
+import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 public class Insights {
@@ -37,27 +42,20 @@ public class Insights {
 
         var grouped = storage.list().collect(groupingBy(Offer::getCompanyId));
         grouped.entrySet().stream()
-                .map(e -> new Company()
-                        .setId(e.getKey())
-                        .setOpenings(e.getValue().size())
-                        .setApplicants((float) e.getValue().stream().mapToInt(Offer::getApplicants).sum() / e.getValue().size()))
+                .map(e -> {
+                    var offers = e.getValue();
+                    var dates = offers.stream().collect(groupingBy(Offer::getDate, () -> new TreeMap<>(reverseOrder()), counting()));//.map(Offer::getDate).collect(toSet()).stream().sorted(reverseOrder()).toList();
+                    return new Company()
+                            .setId(e.getKey())
+                            .setOpenings(offers.size())
+                            .setApplicants((float) offers.stream().mapToInt(Offer::getApplicants).sum() / offers.size())
+                            .setDates(dates);
+                })
+
                 .sorted(comparing(Company::getOpenings).thenComparing(Company::getApplicants))
 //                .sorted(comparing(Company::getApplicants).thenComparing(Company::getOpenings))
                 .forEach(System.out::println);
 
-
-//        Map<String, Company> companies = new HashMap<>();
-//        storage.list().forEach(offer -> {
-//            var company = companies.getOrDefault(offer.getCompanyId(), new Company(offer.getCompanyId()));
-//            ++company.openings;
-//            company.applicants += offer.getApplicants();
-//            companies.put(company.getId(), company);
-//        });
-//
-//        companies.values().stream()
-//                .sorted(comparing(Company::getApplicants).thenComparing(Company::getOpenings))
-//                .forEach(System.out::println);
-//
     }
 
     @Data
@@ -66,5 +64,6 @@ public class Insights {
         String id;
         long openings;
         float applicants;
+        TreeMap<LocalDate, Long> dates;
     }
 }
