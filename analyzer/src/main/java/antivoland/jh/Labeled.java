@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Labeled {
-
     enum Language {
         ESTONIAN("""
                 %C3%A4mmaemand-%C3%B5de-at-cv-keskus-3603199357
