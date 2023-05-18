@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 public class JsonFileStorage<DATA, ID> extends FileStorage {
     private static final Logger LOG = LoggerFactory.getLogger(JsonFileStorage.class);
@@ -22,6 +23,10 @@ public class JsonFileStorage<DATA, ID> extends FileStorage {
 
     public boolean exists(ID id) {
         return Files.exists(file(id));
+    }
+
+    public Stream<DATA> list() {
+        return list("data").map(file -> load(file, clazz));
     }
 
     public DATA load(ID id) {

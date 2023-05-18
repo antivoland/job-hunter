@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 class FileStorage {
     private static final Path DEFAULT_ROOT = Paths.get(System.getProperty("user.dir"));
@@ -16,6 +17,14 @@ class FileStorage {
 
     FileStorage(Path root) {
         this.root = root;
+    }
+
+    Stream<Path> list(String... directoryNames) {
+        try (var files = Files.walk(provide(directoryNames)).filter(Files::isRegularFile)) {
+            return files.toList().stream();
+        } catch (IOException e) {
+            throw new Error(e);
+        }
     }
 
     Path provide(String... directoryNames) {
