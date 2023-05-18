@@ -22,13 +22,11 @@ public class Insights {
         var injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Processor.class).in(Scopes.SINGLETON);
                 bind(Insights.class).in(Scopes.SINGLETON);
             }
         });
 
         injector.getInstance(Insights.class).run();
-
     }
 
     final JsonFileStorage<Offer, String> storage = new JsonFileStorage<>(Offer.class);

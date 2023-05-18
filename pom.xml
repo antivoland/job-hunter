@@ -22,7 +22,7 @@
     <modules>
         <module>core</module>
         <module>linkedin-grabber</module>
-        <module>classifier</module>
+        <module>analyzer</module>
     </modules>
 
     <properties>
@@ -37,7 +37,7 @@
         <jsoup.version>1.16.1</jsoup.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <guava.version>31.1-jre</guava.version>
-        <deeplearning4j.version>1.0.0-M1.1</deeplearning4j.version>
+        <deeplearning4j.version>1.0.0-M2.1</deeplearning4j.version>
         <lombok.version>1.18.20</lombok.version>
         <logback.version>1.2.5</logback.version>
         <junit.version>5.9.3</junit.version>
@@ -108,7 +108,12 @@
             </dependency>
             <dependency>
                 <groupId>org.nd4j</groupId>
-                <artifactId>nd4j-native-platform</artifactId>
+                <artifactId>nd4j-native</artifactId>
+                <version>${deeplearning4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.deeplearning4j</groupId>
+                <artifactId>deeplearning4j-nlp</artifactId>
                 <version>${deeplearning4j.version}</version>
             </dependency>
 

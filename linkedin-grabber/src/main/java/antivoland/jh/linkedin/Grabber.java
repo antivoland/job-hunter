@@ -1,6 +1,9 @@
 package antivoland.jh.linkedin;
 
-import com.google.inject.*;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Scopes;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.Random;
@@ -10,7 +13,7 @@ import static com.codeborne.selenide.Selenide.*;
 
 class Grabber {
     public static void main(String[] args) {
-        var injector = Guice.createInjector(Stage.PRODUCTION, new AbstractModule() {
+        var injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(Processor.class).in(Scopes.SINGLETON);
