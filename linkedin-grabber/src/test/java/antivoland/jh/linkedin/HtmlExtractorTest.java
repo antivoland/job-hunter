@@ -8,7 +8,8 @@ import java.util.Scanner;
 class HtmlExtractorTest {
     @Test
     void test() {
-        var html = load("cache/marketing-assistant.html");
+        var html = load("cache/airfreight-operation-officer.html");
+        // var html = load("cache/marketing-assistant.html");
         // var html = load("cache/specjalista-epr.html");
         var offer = HtmlExtractor.extractOffer(html);
         System.out.println(offer);

@@ -92,7 +92,7 @@ class HtmlExtractor {
 
     private LocalDate date() {
         return LocalDate.parse(trim(document
-                .select("div[class*=job-search-card--active] time")
+                .select("*[class*=job-search-card--active] time")
                 .attr("datetime")));
     }
 }
