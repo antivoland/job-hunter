@@ -1,6 +1,6 @@
 package antivoland.jh;
 
-import antivoland.jh.model.Offer;
+import antivoland.jh.linkedin.LinkedinOffer;
 import antivoland.jh.storage.JsonFileStorage;
 import antivoland.jh.storage.TextFileStorage;
 
@@ -32,7 +32,7 @@ public class Labeled {
     }
 
     public static void main(String[] args) {
-        JsonFileStorage<Offer, String> storage = new JsonFileStorage<>(Offer.class);
+        JsonFileStorage<LinkedinOffer, String> storage = new JsonFileStorage<>(LinkedinOffer.class);
 
         Arrays.stream(Language.values()).forEach(label -> {
             TextFileStorage<String> labeled = new TextFileStorage<>("txt", "nlp", "labeled", label.name().toLowerCase());

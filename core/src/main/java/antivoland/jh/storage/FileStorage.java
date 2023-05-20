@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+@Deprecated
 class FileStorage {
     private static final Path DEFAULT_ROOT = Paths.get(System.getProperty("user.dir"));
 

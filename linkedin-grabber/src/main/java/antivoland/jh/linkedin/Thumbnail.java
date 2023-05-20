@@ -1,7 +1,6 @@
 package antivoland.jh.linkedin;
 
 import antivoland.jh.model.Company;
-import antivoland.jh.model.Offer;
 import com.codeborne.selenide.SelenideElement;
 
 import java.time.LocalDate;
@@ -38,8 +37,8 @@ record Thumbnail(SelenideElement value) {
         return LocalDate.parse(trim(value.$("time").attr("datetime")));
     }
 
-    Offer offer() {
-        return new Offer().setId(offerId()).setCompanyId(companyId()).setTitle(title()).setDate(date());
+    LinkedinOffer offer() {
+        return new LinkedinOffer().setId(offerId()).setCompanyId(companyId()).setTitle(title()).setDate(date());
     }
 
     Company company() {

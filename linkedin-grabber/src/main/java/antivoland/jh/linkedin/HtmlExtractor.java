@@ -1,7 +1,6 @@
 package antivoland.jh.linkedin;
 
 import antivoland.jh.model.Company;
-import antivoland.jh.model.Offer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -13,16 +12,16 @@ import static org.apache.commons.lang3.StringUtils.*;
 class HtmlExtractor {
     private final Document document;
 
-    public HtmlExtractor(String html) {
+    private HtmlExtractor(String html) {
         document = Jsoup.parse(html);
     }
 
-    static Offer extractOffer(String html) {
+    static LinkedinOffer extractOffer(String html) {
         return new HtmlExtractor(html).extractOffer();
     }
 
-    Offer extractOffer() {
-        return new Offer()
+    LinkedinOffer extractOffer() {
+        return new LinkedinOffer()
                 .setId(offerId())
                 .setCompanyId(companyId())
                 .setTitle(title())

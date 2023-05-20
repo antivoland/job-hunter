@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
+@Deprecated
 public class HtmlCache<ID> {
     private static final Logger LOG = LoggerFactory.getLogger(HtmlCache.class);
 

@@ -1,6 +1,5 @@
 package antivoland.jh.linkedin;
 
-import antivoland.jh.model.Offer;
 import antivoland.jh.storage.JsonFileStorage;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -29,24 +28,24 @@ public class Insights {
         injector.getInstance(Insights.class).run();
     }
 
-    final JsonFileStorage<Offer, String> storage = new JsonFileStorage<>(Offer.class);
+    final JsonFileStorage<LinkedinOffer, String> storage = new JsonFileStorage<>(LinkedinOffer.class);
 
     void run() {
         storage.list()
-                .sorted(comparing(Offer::getApplicants))
+                .sorted(comparing(LinkedinOffer::getApplicants))
                 .forEach(offer -> System.out.println(format("%s, %s", offer.getTitle(), offer.getApplicants())));
 
         System.out.println("==============================================");
 
-        var grouped = storage.list().collect(groupingBy(Offer::getCompanyId));
+        var grouped = storage.list().collect(groupingBy(LinkedinOffer::getCompanyId));
         grouped.entrySet().stream()
                 .map(e -> {
                     var offers = e.getValue();
-                    var dates = offers.stream().collect(groupingBy(Offer::getDate, () -> new TreeMap<>(reverseOrder()), counting()));//.map(Offer::getDate).collect(toSet()).stream().sorted(reverseOrder()).toList();
+                    var dates = offers.stream().collect(groupingBy(LinkedinOffer::getDate, () -> new TreeMap<>(reverseOrder()), counting()));//.map(Offer::getDate).collect(toSet()).stream().sorted(reverseOrder()).toList();
                     return new Company()
                             .setId(e.getKey())
                             .setOpenings(offers.size())
-                            .setApplicants((float) offers.stream().mapToInt(Offer::getApplicants).sum() / offers.size())
+                            .setApplicants((float) offers.stream().mapToInt(LinkedinOffer::getApplicants).sum() / offers.size())
                             .setDates(dates);
                 })
 

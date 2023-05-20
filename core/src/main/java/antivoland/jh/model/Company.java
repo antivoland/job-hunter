@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
+@Deprecated
 @Data
 @NoArgsConstructor
 public class Company {

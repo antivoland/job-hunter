@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
+@Deprecated
 public class TextFileStorage<ID> extends FileStorage {
     private static final Logger LOG = LoggerFactory.getLogger(TextFileStorage.class);
 

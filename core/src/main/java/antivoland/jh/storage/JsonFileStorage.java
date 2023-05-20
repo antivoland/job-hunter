@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
+@Deprecated
 public class JsonFileStorage<DATA, ID> extends FileStorage {
     private static final Logger LOG = LoggerFactory.getLogger(JsonFileStorage.class);
     private static final ObjectMapper MAPPER = JsonMapper.builder().addModule(new JavaTimeModule()).build();

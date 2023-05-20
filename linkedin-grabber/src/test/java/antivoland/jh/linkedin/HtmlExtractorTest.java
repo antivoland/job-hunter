@@ -10,10 +10,8 @@ class HtmlExtractorTest {
     void test() {
         var html = load("cache/marketing-assistant.html");
         // var html = load("cache/specjalista-epr.html");
-        var offer = new HtmlExtractor(html).extractOffer();
-        var company = new HtmlExtractor(html).extractCompany();
+        var offer = HtmlExtractor.extractOffer(html);
         System.out.println(offer);
-        System.out.println(company);
         // todo: compare extracted offer and company with samples
     }
 

@@ -46,21 +46,6 @@ class Grabber {
 
             new Controller().listen(this);
 
-            /*
-            open("https://medium.com/topic/" + topic);
-
-            scroll(0);
-
-            $$("section section")
-                    .stream()
-                    .peek(section -> LOG.debug(section.innerHtml()))
-                    .filter(Section::suitable)
-                    .map(Section::new)
-                    .map(Section::asMeta)
-                    .forEach(meta -> meta.save(storage));
-
-             */
-
             closeWindow();
         });
     }
