@@ -1,15 +1,15 @@
 package antivoland.jh.linkedin;
 
-import antivoland.jh.model.Company;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
-class HtmlExtractor {
+public class HtmlExtractor {
     private final Document document;
 
     private HtmlExtractor(String html) {
@@ -30,14 +30,8 @@ class HtmlExtractor {
                 .setDate(date());
     }
 
-    Company extractCompany() {
-        return new Company()
-                .setId(offerId())
-                .setNames(Set.of(companyName()));
-    }
-
     private String offerId() {
-        return substringAfterLast(substringBefore(offerUrl(), "?"), "/");
+        return decode(substringAfterLast(substringBefore(offerUrl(), "?"), "/"));
     }
 
     private String offerUrl() {
@@ -47,7 +41,7 @@ class HtmlExtractor {
     }
 
     private String companyId() {
-        return substringAfterLast(substringBefore(companyUrl(), "?"), "/");
+        return decode(substringAfterLast(substringBefore(companyUrl(), "?"), "/"));
     }
 
     private String companyUrl() {
@@ -94,5 +88,13 @@ class HtmlExtractor {
         return LocalDate.parse(trim(document
                 .select("*[class*=job-search-card--active] time")
                 .attr("datetime")));
+    }
+
+    public static String decode(String url) {
+        return URLDecoder.decode(url, StandardCharsets.UTF_8);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(decode("%D1%82%D0%BE%D1%80%D0%B3%D0%BE%D0%B2%D1%8B%D0%B9-%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%B8%D1%82%D0%B5%D0%BB%D1%8C-%D0%BD%D0%B0-%D1%84%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%BC-%D0%B8-%D1%88%D0%B2%D0%B5%D0%B4%D1%81%D0%BA%D0%BE%D0%BC-%D1%80%D1%8B%D0%BD%D0%BA%D0%B5-at-vecta-design-o%C3%BC-3555208263"));
     }
 }

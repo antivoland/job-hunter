@@ -1,12 +1,11 @@
 package antivoland.jh.linkedin.view;
 
 import antivoland.jh.linkedin.LinkedinOffer;
-import antivoland.jh.model.Company;
 import com.codeborne.selenide.SelenideElement;
 
 import java.time.LocalDate;
-import java.util.Set;
 
+import static antivoland.jh.linkedin.HtmlExtractor.decode;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public record Thumbnail(SelenideElement value) {
@@ -15,7 +14,7 @@ public record Thumbnail(SelenideElement value) {
     }
 
     public String offerId() {
-        return substringAfterLast(substringBefore(offerUrl(), "?"), "/");
+        return decode(substringAfterLast(substringBefore(offerUrl(), "?"), "/"));
     }
 
     String offerUrl() {
@@ -27,7 +26,7 @@ public record Thumbnail(SelenideElement value) {
     }
 
     String companyId() {
-        return substringAfterLast(substringBefore(companyUrl(), "?"), "/");
+        return decode(substringAfterLast(substringBefore(companyUrl(), "?"), "/"));
     }
 
     String companyUrl() {
