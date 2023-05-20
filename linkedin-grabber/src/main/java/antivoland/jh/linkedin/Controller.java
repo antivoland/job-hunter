@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+@Deprecated
 public class Controller {
     enum Command {
         GRAB(1, "Iterate and grab search results"),
@@ -44,11 +45,11 @@ public class Controller {
             switch (command) {
                 case GRAB -> {
                     out.println("Grabbing...");
-                    grabber.grab();
+                   // grabber.grab();
                 }
                 case SCROLL -> {
                     out.println("Grabbing...");
-                    grabber.scroll();
+                   // grabber.scroll();
                 }
             }
         }

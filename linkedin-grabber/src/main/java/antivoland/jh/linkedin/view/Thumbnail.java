@@ -1,5 +1,6 @@
-package antivoland.jh.linkedin;
+package antivoland.jh.linkedin.view;
 
+import antivoland.jh.linkedin.LinkedinOffer;
 import antivoland.jh.model.Company;
 import com.codeborne.selenide.SelenideElement;
 
@@ -8,12 +9,12 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.*;
 
-record Thumbnail(SelenideElement value) {
-    String title() {
+public record Thumbnail(SelenideElement value) {
+    public String title() {
         return trim(value.$("h3").text());
     }
 
-    String offerId() {
+    public String offerId() {
         return substringAfterLast(substringBefore(offerUrl(), "?"), "/");
     }
 
@@ -37,12 +38,9 @@ record Thumbnail(SelenideElement value) {
         return LocalDate.parse(trim(value.$("time").attr("datetime")));
     }
 
+    @Deprecated
     LinkedinOffer offer() {
         return new LinkedinOffer().setId(offerId()).setCompanyId(companyId()).setTitle(title()).setDate(date());
-    }
-
-    Company company() {
-        return new Company().setId(companyId()).setNames(Set.of(companyName()));
     }
 
     @Override

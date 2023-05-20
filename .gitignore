@@ -1,7 +1,6 @@
 target
 .idea
 *.iml
-cache
-nlp
-data
 build
+data
+nlp
