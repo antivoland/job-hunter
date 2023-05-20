@@ -32,6 +32,5 @@ public class TextFileStorage extends FileStorage<String> {
         } catch (IOException e) {
             throw new StorageException(format("Failed to save file '%s'", file), e);
         }
-
     }
 }

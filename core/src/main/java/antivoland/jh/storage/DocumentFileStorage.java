@@ -10,13 +10,13 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
-public class DocumentStorage<DOCUMENT> implements Storage<DOCUMENT> {
+public class DocumentFileStorage<DOCUMENT> implements Storage<DOCUMENT> {
     private static final ObjectMapper MAPPER = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
     private final TextFileStorage storage;
     private final Class<DOCUMENT> clazz;
 
-    public DocumentStorage(Path directory, Class<DOCUMENT> clazz) {
+    public DocumentFileStorage(Path directory, Class<DOCUMENT> clazz) {
         this.storage = new TextFileStorage(directory, "json");
         this.clazz = clazz;
     }

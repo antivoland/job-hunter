@@ -1,7 +1,5 @@
 package antivoland.jh;
 
-import antivoland.jh.linkedin.LinkedinOffer;
-import antivoland.jh.storage.DocumentStorage;
 import antivoland.jh.storage.TextFileStorage;
 
 import java.util.Arrays;
@@ -32,7 +30,7 @@ public class Labeled {
     }
 
     public static void main(String[] args) {
-        DocumentStorage<LinkedinOffer> storage = Resource.linkedinOffers();
+        var storage = Resource.linkedinOffers();
 
         Arrays.stream(Language.values()).forEach(label -> {
             TextFileStorage labeled = Resource.textFiles("nlp", "labeled", label.name().toLowerCase());

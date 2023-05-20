@@ -46,18 +46,14 @@ abstract class FileStorage<DATA> implements Storage<DATA> {
     }
 
     private String fileId(Path file) {
-        return fileId(file, fileExtension);
+        return fileId(fileName(file));
     }
 
-    protected static String fileId(Path file, String fileExtension) {
-        return fileId(fileName(file), fileExtension);
-    }
-
-    protected static String fileId(String fileName, String fileExtension) {
+    private String fileId(String fileName) {
         return fileName.substring(0, fileName.length() - fileExtension.length() - 1);
     }
 
-    protected static String fileName(Path file) {
+    private static String fileName(Path file) {
         return file.getFileName().toString();
     }
 
@@ -65,7 +61,7 @@ abstract class FileStorage<DATA> implements Storage<DATA> {
         return id + "." + fileExtension;
     }
 
-    protected static Path provideDirectory(Path directory) {
+    private static Path provideDirectory(Path directory) {
         if (!Files.exists(directory)) {
             try {
                 Files.createDirectories(directory);
