@@ -1,65 +1,37 @@
 package antivoland.jh.storage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
 
+import static java.lang.String.format;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
-@Deprecated
-public class TextFileStorage<ID> extends FileStorage {
-    private static final Logger LOG = LoggerFactory.getLogger(TextFileStorage.class);
+public class TextFileStorage extends FileStorage<String> {
 
-    private final String extension;
-    private final String[] directoryNames;
-
-    public TextFileStorage(String extension, String... directoryNames) {
-        this.extension = extension;
-        this.directoryNames = directoryNames;
+    public TextFileStorage(Path directory, String fileExtension) {
+        super(directory, fileExtension);
     }
 
-    public long count() {
-        return count(directoryNames);
-    }
-
-    public Stream<String> list() {
-        return list(directoryNames).map(TextFileStorage::load);
-    }
-
-    public String load(ID id) {
-        return load(file(id));
-    }
-
-    public void save(ID id, String data) {
-        save(file(id), data);
-    }
-
-    private Path file(ID id) {
-        return provide(directoryNames).resolve(id + "." + extension);
-    }
-
-    private static String load(Path file) {
-        if (!Files.exists(file)) {
-            return null;
-        }
+    @Override
+    public String load(String id) {
+        var file = file(id);
         try {
             return new String(Files.readAllBytes(file));
         } catch (IOException e) {
-            LOG.warn("Failed to load data", e);
-            return null;
+            throw new StorageException(format("Failed to load file '%s'", file), e);
         }
     }
 
-    private static void save(Path path, String data) {
+    @Override
+    public void save(String id, String data) {
+        var file = file(id, true);
         try {
-            Files.write(path, data.getBytes(), CREATE, TRUNCATE_EXISTING);
+            Files.write(file, data.getBytes(), CREATE, TRUNCATE_EXISTING);
         } catch (IOException e) {
-            LOG.warn("Failed to save data", e);
+            throw new StorageException(format("Failed to save file '%s'", file), e);
         }
+
     }
 }

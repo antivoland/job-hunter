@@ -1,6 +1,7 @@
 package antivoland.jh.linkedin;
 
-import antivoland.jh.storage.JsonFileStorage;
+import antivoland.jh.Resource;
+import antivoland.jh.storage.DocumentStorage;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Scopes;
@@ -28,7 +29,7 @@ public class Insights {
         injector.getInstance(Insights.class).run();
     }
 
-    final JsonFileStorage<LinkedinOffer, String> storage = new JsonFileStorage<>(LinkedinOffer.class);
+    final DocumentStorage<LinkedinOffer> storage = Resource.linkedinOffers();
 
     void run() {
         storage.list()

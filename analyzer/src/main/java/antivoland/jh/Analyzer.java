@@ -1,8 +1,5 @@
 package antivoland.jh;
 
-import antivoland.jh.linkedin.LinkedinOffer;
-import antivoland.jh.storage.JsonFileStorage;
-import antivoland.jh.storage.TextFileStorage;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Scopes;
@@ -40,8 +37,6 @@ public class Analyzer {
 
         injector.getInstance(Analyzer.class).run();
     }
-
-    final JsonFileStorage<LinkedinOffer, String> storage = new JsonFileStorage<>(LinkedinOffer.class);
 
     @SneakyThrows
     void run() {
@@ -126,10 +121,10 @@ public class Analyzer {
                 }
 
                 var maxScore = scores.stream().max(comparing(Pair::getSecond)).orElseThrow();
-                var jsonStorage = new JsonFileStorage<LinkedinOffer, String>(LinkedinOffer.class);
-                var txtStorage = new TextFileStorage<String>("txt", "nlp", "classified", maxScore.getFirst());
+                var offers = Resource.linkedinOffers();
+                var txtStorage = Resource.textFiles("nlp", "classified", maxScore.getFirst());
                 var id = document.getLabels().stream().findFirst().orElseThrow();
-                txtStorage.save(id, jsonStorage.load(id).getDescription());
+                txtStorage.save(id, offers.load(id).getDescription());
             } catch (Exception e) {
                 LOG.warn("", e);
             }

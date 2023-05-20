@@ -1,7 +1,7 @@
 package antivoland.jh;
 
 import antivoland.jh.linkedin.LinkedinOffer;
-import antivoland.jh.storage.JsonFileStorage;
+import antivoland.jh.storage.DocumentStorage;
 import antivoland.jh.storage.TextFileStorage;
 
 import java.util.Arrays;
@@ -32,10 +32,10 @@ public class Labeled {
     }
 
     public static void main(String[] args) {
-        JsonFileStorage<LinkedinOffer, String> storage = new JsonFileStorage<>(LinkedinOffer.class);
+        DocumentStorage<LinkedinOffer> storage = Resource.linkedinOffers();
 
         Arrays.stream(Language.values()).forEach(label -> {
-            TextFileStorage<String> labeled = new TextFileStorage<>("txt", "nlp", "labeled", label.name().toLowerCase());
+            TextFileStorage labeled = Resource.textFiles("nlp", "labeled", label.name().toLowerCase());
             label.ids.forEach(id -> {
                 var offer = storage.load(id);
                 labeled.save(id, offer.getDescription());

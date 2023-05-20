@@ -1,59 +1,57 @@
 package antivoland.jh.storage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
+import org.apache.commons.compress.utils.IOUtils;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
 
-import static java.nio.file.StandardOpenOption.CREATE;
-import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
+import static java.lang.String.format;
 
-@Deprecated
-public class HtmlCache<ID> {
-    private static final Logger LOG = LoggerFactory.getLogger(HtmlCache.class);
+public class HtmlCache extends FileStorage<String> {
+    private static final String ARCHIVE_EXTENSION = "tar.gz";
+    private static final String ENTRY_EXTENSION = "html";
 
-    private final FileStorage storage = new FileStorage();
-
-    public long count() {
-        return storage.count("cache");
+    public HtmlCache(Path directory) {
+        super(directory, ARCHIVE_EXTENSION);
     }
 
-    public Stream<String> list() {
-        return storage.list("cache").map(HtmlCache::load);
-    }
+    @Override
+    public String load(String id) {
+        var file = file(id);
+        try (var fi = Files.newInputStream(file);
+             var bi = new BufferedInputStream(fi);
+             var gzi = new GzipCompressorInputStream(bi);
+             var i = new TarArchiveInputStream(gzi)) {
 
-    public String load(ID id) {
-        return load(file(id));
-    }
-
-    public void save(ID id, String data) {
-        save(file(id), data);
-    }
-
-    private Path file(ID id) {
-        return storage.provide("cache").resolve(id + ".html");
-    }
-
-    private static String load(Path file) {
-        if (!Files.exists(file)) {
-            return null;
-        }
-        try {
-            return new String(Files.readAllBytes(file));
+            i.getNextEntry();
+            return new String(IOUtils.toByteArray(i));
         } catch (IOException e) {
-            LOG.warn("Failed to load data", e);
-            return null;
+            throw new StorageException(format("Failed to decompress file %s", file), e);
         }
     }
 
-    private static void save(Path path, String data) {
-        try {
-            Files.write(path, data.getBytes(), CREATE, TRUNCATE_EXISTING);
+    @Override
+    public void save(String id, String data) {
+        var file = file(id, true);
+        try (var fo = Files.newOutputStream(file);
+             var gzo = new GzipCompressorOutputStream(fo);
+             var o = new TarArchiveOutputStream(gzo)) {
+
+            var entry = new TarArchiveEntry(fileName("entry", ENTRY_EXTENSION));
+            entry.setSize(data.getBytes().length);
+            o.putArchiveEntry(entry);
+            o.write(data.getBytes());
+            o.closeArchiveEntry();
+            o.finish();
         } catch (IOException e) {
-            LOG.warn("Failed to save data", e);
+            throw new StorageException(format("Failed to compress file %s", file), e);
         }
     }
 }

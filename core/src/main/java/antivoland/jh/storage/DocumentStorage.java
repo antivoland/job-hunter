@@ -10,50 +10,45 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
-@Deprecated
-public class DocumentStorage<DOCUMENT> {
+public class DocumentStorage<DOCUMENT> implements Storage<DOCUMENT> {
     private static final ObjectMapper MAPPER = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
-    private final V2TextFileStorage storage;
+    private final TextFileStorage storage;
     private final Class<DOCUMENT> clazz;
 
     public DocumentStorage(Path directory, Class<DOCUMENT> clazz) {
-        this.storage = new V2TextFileStorage(directory, "json");
+        this.storage = new TextFileStorage(directory, "json");
         this.clazz = clazz;
     }
 
-    public long countDocuments() {
-        return storage.countFiles();
+    @Override
+    public Stream<String> listIds() {
+        return storage.listIds();
     }
 
-    public Stream<DOCUMENT> listDocuments() {
-        return listDocumentIds().map(this::loadDocument);
+    @Override
+    public boolean exists(String id) {
+        return storage.exists(id);
     }
 
-    public Stream<String> listDocumentIds() {
-        return storage.listFileIds();
-    }
-
-    public boolean documentExists(String documentId) {
-        return storage.fileExists(documentId);
-    }
-
-    public DOCUMENT loadDocument(String documentId) {
-        var data = storage.loadFile(documentId);
+    @Override
+    public DOCUMENT load(String id) {
+        var data = storage.load(id);
         try {
             return MAPPER.readValue(data, clazz);
         } catch (JsonProcessingException e) {
-            throw new StorageException(format("Failed to deserialize document '%s'", documentId), e);
+            throw new StorageException(format("Failed to deserialize document '%s'", id), e);
         }
     }
 
-    public void saveDocument(String documentId, DOCUMENT document) {
+    @Override
+    public void save(String id, DOCUMENT document) {
         String data;
         try {
             data = MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(document);
         } catch (JsonProcessingException e) {
-            throw new StorageException(format("Failed to serialize document '%s'", documentId), e);
+            throw new StorageException(format("Failed to serialize document '%s'", id), e);
         }
-        storage.saveFile(documentId, data);
+        storage.save(id, data);
     }
 }
