@@ -33,6 +33,6 @@ class Grabber {
 
         System.out.printf("Processed %s new LinkedIn offers (the total amount is now %s)%n",
                 processed.get(),
-                linkedinOffers().countDocuments());
+                linkedinOffers().count());
     }
 }

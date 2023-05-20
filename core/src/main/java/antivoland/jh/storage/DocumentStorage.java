@@ -10,14 +10,15 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
+@Deprecated
 public class DocumentStorage<DOCUMENT> {
     private static final ObjectMapper MAPPER = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
-    private final V2FileStorage storage;
+    private final V2TextFileStorage storage;
     private final Class<DOCUMENT> clazz;
 
     public DocumentStorage(Path directory, Class<DOCUMENT> clazz) {
-        this.storage = new V2FileStorage(directory, "json");
+        this.storage = new V2TextFileStorage(directory, "json");
         this.clazz = clazz;
     }
 
@@ -42,7 +43,7 @@ public class DocumentStorage<DOCUMENT> {
         try {
             return MAPPER.readValue(data, clazz);
         } catch (JsonProcessingException e) {
-            throw new DocumentStorageException(format("Failed to deserialize document '%s'", documentId), e);
+            throw new StorageException(format("Failed to deserialize document '%s'", documentId), e);
         }
     }
 
@@ -51,7 +52,7 @@ public class DocumentStorage<DOCUMENT> {
         try {
             data = MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(document);
         } catch (JsonProcessingException e) {
-            throw new DocumentStorageException(format("Failed to serialize document '%s'", documentId), e);
+            throw new StorageException(format("Failed to serialize document '%s'", documentId), e);
         }
         storage.saveFile(documentId, data);
     }

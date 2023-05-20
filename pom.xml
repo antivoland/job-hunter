@@ -37,6 +37,7 @@
         <jsoup.version>1.16.1</jsoup.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <guava.version>31.1-jre</guava.version>
+        <commons-compress.version>1.23.0</commons-compress.version>
         <deeplearning4j.version>1.0.0-M2.1</deeplearning4j.version>
         <console-progress-bar.version>1.0.0</console-progress-bar.version>
         <lombok.version>1.18.20</lombok.version>
@@ -100,6 +101,12 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
             </dependency>
 
             <dependency>
