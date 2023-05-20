@@ -40,15 +40,25 @@ public class SearchPage {
 
     public static boolean scroll() {
         var count = thumbnails().count();
+
         var attempts = 0;
         while (attempts < SCROLL_ATTEMPTS) {
             executeJavaScript("scroll(0, document.body.scrollHeight);");
-            if (thumbnails().count() > count) return true;
             sleep(randomDelayMillis());
-            executeJavaScript("scroll(0, 0);");
-            sleep(randomDelayMillis());
+
+            if ($("button[data-tracking-control-name='infinite-scroller_show-more']").isDisplayed()) {
+                $("button[data-tracking-control-name='infinite-scroller_show-more']").click();
+                sleep(randomDelayMillis());
+                if (thumbnails().count() > count) return true;
+            } else {
+                if (thumbnails().count() > count) return true;
+                executeJavaScript("scroll(0, 0);");
+                sleep(randomDelayMillis());
+            }
+
             ++attempts;
         }
+
         return false;
     }
 
