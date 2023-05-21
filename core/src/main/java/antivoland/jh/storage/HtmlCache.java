@@ -25,6 +25,7 @@ public class HtmlCache extends FileStorage<String> {
     @Override
     public String load(String id) {
         var file = file(id);
+        if (!exists(file)) return null;
         try (var fi = Files.newInputStream(file);
              var bi = new BufferedInputStream(fi);
              var gzi = new GzipCompressorInputStream(bi);

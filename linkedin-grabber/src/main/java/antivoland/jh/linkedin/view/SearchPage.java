@@ -1,26 +1,46 @@
 package antivoland.jh.linkedin.view;
 
+import com.codeborne.selenide.SelenideElement;
+
 import java.util.Random;
 import java.util.stream.Stream;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class SearchPage {
     private static final int DELAY_MILLIS = 1000;
-    private static final int SCROLL_ATTEMPTS = 10;
+    private static final int SCROLL_ATTEMPTS = 5;
 
-    public static void search(String location) {
+    public static void search(String query, String location) {
         open("https://www.linkedin.com/jobs/search");
 
         $("button[data-control-name='ga-cookie.consent.deny.v4']").click();
 
-        $("input[id='job-search-bar-location']").click();
-        $("input[id='job-search-bar-location']").clear();
-        $("input[id='job-search-bar-location']").sendKeys(location);
+        if (!isBlank(query)) {
+            query().click();
+            query().clear();
+            query().sendKeys(query);
+        }
+
+        if (!isBlank(location)) {
+            location().click();
+            location().clear();
+            location().sendKeys(location);
+        }
+
         $("button[data-tracking-control-name='public_jobs_jobs-search-bar_base-search-bar-search-submit']").click();
 
         $("button[data-tracking-control-name='public_jobs_conversion-modal_dismiss']").click();
+    }
+
+    private static SelenideElement location() {
+        return $("input[id='job-search-bar-location']");
+    }
+
+    private static SelenideElement query() {
+        return $("input[id='job-search-bar-keywords']");
     }
 
     public static Stream<Thumbnail> thumbnails() {

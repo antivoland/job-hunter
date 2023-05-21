@@ -17,6 +17,7 @@ public class TextFileStorage extends FileStorage<String> {
     @Override
     public String load(String id) {
         var file = file(id);
+        if (!exists(file)) return null;
         try {
             return new String(Files.readAllBytes(file));
         } catch (IOException e) {

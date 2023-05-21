@@ -34,6 +34,7 @@ public class DocumentFileStorage<DOCUMENT> implements Storage<DOCUMENT> {
     @Override
     public DOCUMENT load(String id) {
         var data = storage.load(id);
+        if (data == null) return null;
         try {
             return MAPPER.readValue(data, clazz);
         } catch (JsonProcessingException e) {

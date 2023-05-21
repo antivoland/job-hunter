@@ -1,6 +1,7 @@
 package antivoland.jh;
 
 import antivoland.jh.linkedin.LinkedinOffer;
+import antivoland.jh.linkedin.LinkedinOfferContext;
 import antivoland.jh.storage.DocumentFileStorage;
 import antivoland.jh.storage.HtmlCache;
 import antivoland.jh.storage.TextFileStorage;
@@ -18,12 +19,19 @@ public class Resource {
     private static final Supplier<HtmlCache> LINKEDIN_CACHE = Suppliers.memoize(() ->
             new HtmlCache(Paths.get(DEFAULT_ROOT, "data", "linkedin", "cache")));
 
+    private static final Supplier<DocumentFileStorage<LinkedinOfferContext>> LINKEDIN_CONTEXTS = Suppliers.memoize(() ->
+            new DocumentFileStorage<>(Paths.get(DEFAULT_ROOT, "data", "linkedin", "contexts"), LinkedinOfferContext.class));
+
     public static DocumentFileStorage<LinkedinOffer> linkedinOffers() {
         return LINKEDIN_OFFERS.get();
     }
 
     public static HtmlCache linkedinCache() {
         return LINKEDIN_CACHE.get();
+    }
+
+    public static DocumentFileStorage<LinkedinOfferContext> linkedinContexts() {
+        return LINKEDIN_CONTEXTS.get();
     }
 
     public static TextFileStorage textFiles(String... relativePath) {

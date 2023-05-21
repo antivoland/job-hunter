@@ -30,7 +30,11 @@ abstract class FileStorage<DATA> implements Storage<DATA> {
 
     @Override
     public final boolean exists(String id) {
-        return Files.exists(file(id));
+        return exists(file(id));
+    }
+
+    protected final boolean exists(Path file) {
+        return Files.exists(file);
     }
 
     protected final Path file(String id) {
