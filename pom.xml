@@ -43,6 +43,7 @@
         <lombok.version>1.18.28</lombok.version>
         <logback.version>1.4.7</logback.version>
         <junit.version>5.10.0-M1</junit.version>
+        <assertj.version>3.24.2</assertj.version>
 
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
@@ -125,12 +126,14 @@
                 <version>${deeplearning4j.version}</version>
             </dependency>
 
+            <!-- https://github.com/creditnet/console-progress-bar -->
             <dependency>
                 <groupId>ru.creditnet</groupId>
                 <artifactId>console-progress-bar</artifactId>
                 <version>${console-progress-bar.version}</version>
             </dependency>
 
+            <!-- https://github.com/projectlombok/lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -138,16 +141,26 @@
                 <scope>provided</scope>
             </dependency>
 
+            <!-- https://github.com/qos-ch/logback -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
             </dependency>
 
+            <!-- https://github.com/junit-team/junit5 -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- https://github.com/assertj/assertj -->
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
