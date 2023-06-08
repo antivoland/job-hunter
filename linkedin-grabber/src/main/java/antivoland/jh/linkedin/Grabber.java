@@ -14,12 +14,38 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 class Grabber {
     public static void main(String[] args) {
         using(new ChromeDriver(), () -> {
-            // process("senior software engineer", "tallinn");
-            process("java", "tallinn");
+            // process("staff software engineer", "tallinn");
+            process("senior software engineer", "tallinn");
+            // process("software engineer", "tallinn");
+            // process("data engineer", "tallinn");
+            // process("data scientist", "tallinn");
+            // process("data analyst", "tallinn");
+            // process("engineering manager", "tallinn");
+            // process("project manager", "tallinn");
+            // process("backend", "tallinn");
+            // process("frontend", "tallinn");
+            // process("java", "tallinn");
+            // process("scala", "tallinn");
+            // process("python", "tallinn");
+            // process("aws", "tallinn");
+            // process("azure", "tallinn");
+
+            // process("fintech", "tallinn");
+
+            // process("visa sponsorship", "tallinn");
+            // process("relocation", "tallinn");
+            // process("residence permit", "tallinn");
+
+            // process("quantum", "tallinn");
+            // process("science", "tallinn");
 
             // process("senior software engineer", "stockholm");
 
-            // process(null, "amsterdam");
+            // process("senior software engineer", "amsterdam");
+
+            // process("senior software engineer", "berlin");
+
+            // process("senior software engineer", "london");
 
             closeWindow();
         });
@@ -51,8 +77,8 @@ class Grabber {
             });
         } while (SearchPage.scroll());
 
-        System.out.printf("Processed %s new LinkedIn offers (the total amount is now %s)%n",
+        System.out.printf("Processed %s new LinkedIn offers (the total amount was %s)%n",
                 processed.get(),
-                linkedinOffers().count());
+                SearchPage.thumbnails().count());
     }
 }

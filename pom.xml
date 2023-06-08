@@ -31,18 +31,18 @@
 
         <java.version>16</java.version>
 
-        <guice.version>5.0.1</guice.version>
-        <jackson.version>2.12.5</jackson.version>
-        <selenide.version>5.24.1</selenide.version>
+        <guice.version>7.0.0</guice.version>
+        <jackson.version>2.15.2</jackson.version>
+        <selenide.version>6.15.0</selenide.version>
         <jsoup.version>1.16.1</jsoup.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>32.0.0-jre</guava.version>
         <commons-compress.version>1.23.0</commons-compress.version>
         <deeplearning4j.version>1.0.0-M2.1</deeplearning4j.version>
         <console-progress-bar.version>1.0.0</console-progress-bar.version>
-        <lombok.version>1.18.20</lombok.version>
-        <logback.version>1.2.5</logback.version>
-        <junit.version>5.9.3</junit.version>
+        <lombok.version>1.18.28</lombok.version>
+        <logback.version>1.4.7</logback.version>
+        <junit.version>5.10.0-M1</junit.version>
 
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
