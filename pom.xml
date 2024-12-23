@@ -33,7 +33,7 @@
 
         <guice.version>7.0.0</guice.version>
         <jackson.version>2.18.2</jackson.version>
-        <selenide.version>6.19.1</selenide.version>
+        <selenide.version>7.6.1</selenide.version>
         <jsoup.version>1.18.3</jsoup.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <guava.version>33.4.0-jre</guava.version>
