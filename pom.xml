@@ -45,7 +45,7 @@
         <junit.version>5.10.0-M1</junit.version>
         <assertj.version>3.24.2</assertj.version>
 
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.1.0</maven-surefire-plugin.version>
     </properties>
