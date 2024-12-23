@@ -41,7 +41,7 @@
         <deeplearning4j.version>1.0.0-M2.1</deeplearning4j.version>
         <console-progress-bar.version>1.0.0</console-progress-bar.version>
         <lombok.version>1.18.28</lombok.version>
-        <logback.version>1.4.7</logback.version>
+        <logback.version>1.4.12</logback.version>
         <junit.version>5.10.0-M1</junit.version>
         <assertj.version>3.24.2</assertj.version>
 
