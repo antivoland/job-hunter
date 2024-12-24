@@ -1,0 +1,6 @@
+# Install SDKMAN! (https://sdkman.io)
+# To make SDKMAN! automatically switch SDK versions when entering a directory,
+# set sdkman_auto_env=true in the SDKMAN configuration (~/.sdkman/etc/config)
+#
+# Add key=value pairs of SDKs to use below
+java=17.0.13-tem
