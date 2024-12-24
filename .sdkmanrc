@@ -3,4 +3,7 @@
 # set sdkman_auto_env=true in the SDKMAN configuration (~/.sdkman/etc/config)
 #
 # Add key=value pairs of SDKs to use below
-java=17.0.13-tem
+# TODO: cleanup
+#java=17.0.13-tem
+java=21.0.5-tem
+#java=23.0.1-tem
