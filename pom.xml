@@ -37,7 +37,8 @@
         <jsoup.version>1.18.3</jsoup.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <guava.version>33.4.0-jre</guava.version>
-        <commons-compress.version>1.23.0</commons-compress.version>
+        <commons-compress.version>1.26.0</commons-compress.version>
+        <commons-codec.version>1.17.1</commons-codec.version>
         <deeplearning4j.version>1.0.0-M2.1</deeplearning4j.version>
         <console-progress-bar.version>1.0.0</console-progress-bar.version>
         <lombok.version>1.18.36</lombok.version>
@@ -108,6 +109,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
                 <version>${commons-compress.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
             </dependency>
 
             <dependency>
